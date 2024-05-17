@@ -75,6 +75,7 @@ class OpenAILLM(BaseLLM):
 
         return params
 
+
     async def _achat_completion_stream(self, messages: list[dict], timeout=USE_CONFIG_TIMEOUT) -> str:
         response: AsyncStream[ChatCompletionChunk] = await self.aclient.chat.completions.create(
             **self._cons_kwargs(messages, timeout=self.get_timeout(timeout)), stream=True
@@ -91,10 +92,10 @@ class OpenAILLM(BaseLLM):
             if finish_reason:
                 if hasattr(chunk, "usage"):
                     # Some services have usage as an attribute of the chunk, such as Fireworks
-                    usage = CompletionUsage(**chunk.usage)
+                    usage = CompletionUsage(**chunk.usage) if chunk.usage else None
                 elif hasattr(chunk.choices[0], "usage"):
                     # The usage of some services is an attribute of chunk.choices[0], such as Moonshot
-                    usage = CompletionUsage(**chunk.choices[0].usage)
+                    usage = CompletionUsage(**chunk.choices[0].usage) if chunk.choices[0].usage else None
 
         log_llm_stream("\n")
         full_reply_content = "".join(collected_messages)
@@ -104,6 +105,7 @@ class OpenAILLM(BaseLLM):
 
         self._update_costs(usage)
         return full_reply_content
+
 
     def _cons_kwargs(self, messages: list[dict], timeout=USE_CONFIG_TIMEOUT, **extra_kwargs) -> dict:
         kwargs = {
