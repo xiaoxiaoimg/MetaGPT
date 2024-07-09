@@ -117,7 +117,7 @@ class Engineer(Role):
                 coding_context = await action.run()
 
             dependencies = {coding_context.design_doc.root_relative_path, coding_context.task_doc.root_relative_path}
-            if self.config.inc:
+            if self.config.inc and coding_context.code_plan_and_change_doc is not None:
                 dependencies.add(coding_context.code_plan_and_change_doc.root_relative_path)
             await self.project_repo.srcs.save(
                 filename=coding_context.filename,
