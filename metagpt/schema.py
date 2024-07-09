@@ -56,22 +56,16 @@ from metagpt.utils.serialize import (
 )
 
 
-class SerializationMixin(BaseModel, extra="forbid"):
-    """
-    PolyMorphic subclasses Serialization / Deserialization Mixin
-    - First of all, we need to know that pydantic is not designed for polymorphism.
-    - If Engineer is subclass of Role, it would be serialized as Role. If we want to serialize it as Engineer, we need
-        to add `class name` to Engineer. So we need Engineer inherit SerializationMixin.
-
-    More details:
-    - https://docs.pydantic.dev/latest/concepts/serialization/
-    - https://github.com/pydantic/pydantic/discussions/7008 discuss about avoid `__get_pydantic_core_schema__`
-    """
+class Task(BaseModel):
+    task_id: str = ""
+    dependent_task_ids: list[str] = []
+    instruction: str = ""
+    task_type: str = ""
+    assignee: str = ""
+    status: str = ""
 
     __is_polymorphic_base = False
     __subclasses_map__ = {}
-
-    @model_serializer(mode="wrap")
     def __serialize_with_class_type__(self, default_serializer) -> Any:
         # default serializer, then append the `__module_class_name` field and return
         ret = default_serializer(self)
