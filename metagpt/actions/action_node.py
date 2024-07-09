@@ -418,13 +418,11 @@ class ActionNode:
     ) -> (str, BaseModel):
         """Use ActionOutput to wrap the output of aask"""
         content = await self.llm.aask(prompt, system_msgs, images=images, timeout=timeout)
-        logger.debug(f"llm raw output:\n{content}")
+        if isinstance(content, bytes):
+            content = content.decode('utf-8')
         output_class = self.create_model_class(output_class_name, output_data_mapping)
-
         if schema == "json":
-            parsed_data = llm_output_postprocess(
-                output=content, schema=output_class.model_json_schema(), req_key=f"[/{TAG}]"
-            )
+            parsed_data = llm_output_postprocess(output=content, schema=output_class.model_json_schema(), req_key=f"[/{TAG}]")
         else:  # using markdown parser
             parsed_data = OutputParser.parse_data_with_mapping(content, output_data_mapping)
 
