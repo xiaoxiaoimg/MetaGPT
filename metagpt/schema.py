@@ -338,9 +338,17 @@ class AIMessage(Message):
         super().__init__(content=content, role="assistant")
 
 
+from typing import List
+
 class Task(BaseModel):
     task_id: str = ""
-    dependent_task_ids: list[str] = []  # Tasks prerequisite to this Task
+    dependent_task_ids: List[str] = []  # Tasks prerequisite to this Task
+    instruction: str = ""
+    task_type: str = ""
+    code: str = ""
+    result: str = ""
+    is_success: bool = False
+    is_finished: bool = False
     instruction: str = ""
     task_type: str = ""
     code: str = ""
