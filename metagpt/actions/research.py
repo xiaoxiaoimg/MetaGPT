@@ -267,11 +267,21 @@ class ConductResearch(Action):
         Returns:
             The generated research report.
         """
-        prompt = CONDUCT_RESEARCH_PROMPT.format(topic=topic, content=content)
-        logger.debug(prompt)
-        self.llm.auto_max_tokens = True
-        return await self._aask(prompt, [system_text])
+        # Split content into chunks to avoid exceeding max completion tokens
+        chunk_size = 3000  # Adjust chunk size as needed
+        content_chunks = [content[i:i + chunk_size] for i in range(0, len(content), chunk_size)]
+        chunk_summaries = []
 
+        for chunk in content_chunks:
+            prompt = CONDUCT_RESEARCH_PROMPT.format(topic=topic, content=chunk)
+            logger.debug(prompt)
+            summary = await self._aask(prompt, [system_text])
+            if summary != "Not relevant.":
+                chunk_summaries.append(summary)
+
+        # Combine chunk summaries into a final report
+        final_report = "\n".join(chunk_summaries)
+        return final_report
 
 def get_research_system_text(topic: str, language: str):
     """Get the system text for conducting research.
