@@ -346,19 +346,20 @@ def count_string_tokens(string: str, model_name: str) -> int:
     return len(encoding.encode(string))
 
 
-def get_max_completion_tokens(messages: list[dict], model: str, default: int) -> int:
-    """Calculate the maximum number of completion tokens for a given model and list of messages.
+    def get_max_completion_tokens(messages: list[dict], model: str, default: int) -> int:
+        """Calculate the maximum number of completion tokens for a given model and list of messages.
 
-    Args:
-        messages: A list of messages.
-        model: The model name.
+        Args:
+            messages: A list of messages.
+            model: The model name.
+            default: The default number of tokens if the model is not found.
 
-    Returns:
-        The maximum number of completion tokens.
-    """
-    if model not in TOKEN_MAX:
-        return default
-    return TOKEN_MAX[model] - count_message_tokens(messages) - 1
+        Returns:
+            The maximum number of completion tokens.
+        """
+        if model not in TOKEN_MAX:
+            return default
+        return min(TOKEN_MAX[model] - count_message_tokens(messages) - 1, 4096)
 
 
 async def get_openrouter_tokens(chunk: ChatCompletionChunk) -> CompletionUsage:
