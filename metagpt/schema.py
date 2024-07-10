@@ -347,7 +347,7 @@ class Task(BaseModel):
     result: str = ""
     is_success: bool = False
     is_finished: bool = False
-
+    assignee: str = ""
     def reset(self):
         self.code = ""
         self.result = ""
