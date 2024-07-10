@@ -81,10 +81,19 @@ class CollectLinks(Action):
     name: str = "CollectLinks"
     i_context: Optional[str] = None
     desc: str = "Collect links from a search engine."
-    search_func: Optional[Any] = None
+    search_func: Optional[Callable[[str], list[str]]] = None
     search_engine: Optional[SearchEngine] = None
-    rank_func: Optional[Callable[[list[str]], None]] = None
+    rank_func: Optional[Callable[[list[str]], list[int]]] = None
 
+    @model_validator(mode="after")
+    def validate_engine_and_run_func(self):
+        if self.search_engine is None:
+            self.search_engine = SearchEngine.from_search_config(self.config.search, proxy=self.config.proxy)
+        if self.search_func is None:
+            self.search_func = self.search_engine.search
+        if self.rank_func is None:
+            self.rank_func = self.search_engine.rank_urls
+        return self
     @model_validator(mode="after")
     def validate_engine_and_run_func(self):
         if self.search_engine is None:
