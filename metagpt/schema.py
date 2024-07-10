@@ -343,11 +343,22 @@ class Task(BaseModel):
     dependent_task_ids: list[str] = []  # Tasks prerequisite to this Task
     instruction: str = ""
     task_type: str = ""
+    assignee: str = ""
     code: str = ""
     result: str = ""
     is_success: bool = False
     is_finished: bool = False
 
+    def reset(self):
+        self.code = ""
+        self.result = ""
+        self.is_success = False
+        self.is_finished = False
+
+    def update_task_result(self, task_result: TaskResult):
+        self.code = task_result.code
+        self.result = task_result.result
+        self.is_success = task_result.is_success
     def reset(self):
         self.code = ""
         self.result = ""
