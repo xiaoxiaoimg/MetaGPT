@@ -48,7 +48,7 @@ def build_api_arequest(
         request_timeout,
         form,
         resources,
-        base_address,
+( api_protocol, ws_stream_mode, is_binary_input, http_method, stream, async_request, query, headers, request_timeout, form, resources, base_address, flattened_output ) = _get_protocol_params(kwargs)
         flattened_output
     ) = _get_protocol_params(kwargs)
     task_id = kwargs.pop("task_id", None)
