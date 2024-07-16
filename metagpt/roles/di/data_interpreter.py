@@ -183,7 +183,11 @@ class DataInterpreter(Role):
             ]
         ):
             return
-        logger.info("Check updated data")
+        if len(context) > 50000:
+            context = context[:50000]
+            context = context[:50000]
+            context = context[:50000]
+    context = context[:50000]
         code = await CheckData().run(self.planner.plan)
         if not code.strip():
             return
