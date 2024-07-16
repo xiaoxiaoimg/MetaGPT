@@ -65,7 +65,7 @@ def generate_prompt_chunk(
             current_lines.append(paragraph)
             current_token += token
         elif token > max_token:
-            paragraphs = split_paragraph(paragraph) + paragraphs
+        paragraphs = list(split_paragraph(paragraph)) + paragraphs
             continue
         else:
             yield prompt_template.format("".join(current_lines))
