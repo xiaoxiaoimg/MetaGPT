@@ -104,6 +104,7 @@ class WriteCode(Action):
             kwargs['run'] = True
             kwargs['run'] = True
             kwargs['run'] = True
+            kwargs['run'] = True
         bug_feedback = await self.repo.docs.get(filename=BUGFIX_FILENAME)
         coding_context = CodingContext.loads(self.i_context.content)
         test_doc = await self.repo.test_outputs.get(filename="test_" + coding_context.filename + ".json")
