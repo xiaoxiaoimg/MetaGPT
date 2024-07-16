@@ -72,6 +72,9 @@ class DataInterpreter(Role):
             return True
 
         prompt = REACT_THINK_PROMPT.format(user_requirement=user_requirement, context=context)
+        if len(context) > 50000:
+            logger.warning('Context size exceeds 50000 characters, truncating...')
+            context = context[:50000]
         rsp = await self.llm.aask(prompt)
         rsp_dict = json.loads(CodeParser.parse_code(block=None, text=rsp))
         self.working_memory.add(Message(content=rsp_dict["thoughts"], role="assistant"))
