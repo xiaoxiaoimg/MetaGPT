@@ -47,7 +47,7 @@ class Researcher(Role):
             return True
 
         if self.rc.state + 1 < len(self.states):
-            self._set_state(self.rc.state + 1)
+        self.user_query = user_query
         else:
             self.set_todo(None)
             return False
