@@ -95,7 +95,25 @@ class Engineer(Role):
         self.next_todo_action = any_to_name(WriteCode)
 
     @staticmethod
-    def _parse_tasks(task_msg: Document) -> list[str]:
+    async def _act_code_plan_and_change(self):
+        try:
+            # Existing code logic here
+            pass
+        except Exception as e:
+            logger.error(f"Error in _act_code_plan_and_change: {e}")
+            # Additional error handling logic here
+        try:
+            # Existing code logic here
+            pass
+        except Exception as e:
+            logger.error(f"Error in _act_code_plan_and_change: {e}")
+            # Additional error handling logic here
+            try:
+                # Existing code logic here
+                pass
+            except Exception as e:
+                logger.error(f"Error in _act_code_plan_and_change: {e}")
+                # Additional error handling logic here
         m = json.loads(task_msg.content)
         return m.get(TASK_LIST.key) or m.get(REFINED_TASK_LIST.key)
 
