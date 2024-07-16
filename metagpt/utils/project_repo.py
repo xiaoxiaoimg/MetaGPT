@@ -94,6 +94,15 @@ class ProjectRepo(FileRepository):
         elif isinstance(root, GitRepository):
             git_repo_ = root
         else:
+            raise ValueError("Invalid root: recover_path must be a valid directory and end with 'team'")
+        super().__init__(git_repo=git_repo_, relative_path=Path("."))
+        self._git_repo = git_repo_
+        self.docs = DocFileRepositories(self._git_repo)
+        if isinstance(root, str) or isinstance(root, Path):
+            git_repo_ = GitRepository(local_path=Path(root))
+        elif isinstance(root, GitRepository):
+            git_repo_ = root
+        else:
             raise ValueError("Invalid root")
         super().__init__(git_repo=git_repo_, relative_path=Path("."))
         self._git_repo = git_repo_
