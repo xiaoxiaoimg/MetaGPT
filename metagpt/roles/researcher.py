@@ -62,7 +62,7 @@ class Researcher(Role):
         else:
             topic = msg.content
 
-        research_system_text = self.research_system_text(topic, todo)
+            topic = msg.content
         if isinstance(todo, CollectLinks):
             links = await todo.run(topic, 4, 4)
             ret = Message(
