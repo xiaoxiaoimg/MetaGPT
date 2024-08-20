@@ -99,7 +99,11 @@ class Engineer(Role):
         m = json.loads(task_msg.content)
         return m.get(TASK_LIST.key) or m.get(REFINED_TASK_LIST.key)
 
-    async def _act_sp_with_cr(self, review=False) -> Set[str]:
+async def _act_sp_with_cr(self, review=False) -> Set[str]:
+    coding_context = self.coding_context
+    dependencies = set()
+    if coding_context.code_plan_and_change_doc is not None:
+        dependencies.add(coding_context.code_plan_and_change_doc.root_relative_path)
         changed_files = set()
         for todo in self.code_todos:
             """
