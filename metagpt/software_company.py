@@ -58,10 +58,8 @@ def generate_repo(
             company.hire([QaEngineer()])
     else:
         stg_path = Path(recover_path)
-        if not stg_path.exists() or not str(stg_path).endswith("team"):
-            raise FileNotFoundError(f"{recover_path} not exists or not endswith `team`")
-
-        company = Team.deserialize(stg_path=stg_path, context=ctx)
+        if not stg_path.exists() or not str(stg_path).endswith('team'):
+            raise ValueError(f"Invalid root: {recover_path} does not exist or does not end with 'team'")
         idea = company.idea
 
     company.invest(investment)
