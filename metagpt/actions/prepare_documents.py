@@ -37,6 +37,10 @@ class PrepareDocuments(Action):
             path = Path(self.config.project_path)
         if path.exists() and not self.config.inc:
             shutil.rmtree(path)
+        elif path.exists() and self.config.inc:
+            # Ensure the path exists and is a directory
+            if not path.is_dir():
+                raise NotADirectoryError(f"{path} is not a directory")
         self.config.project_path = path
         self.context.git_repo = GitRepository(local_path=path, auto_init=True)
         self.context.repo = ProjectRepo(self.context.git_repo)
