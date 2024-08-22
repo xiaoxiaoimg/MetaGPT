@@ -183,6 +183,8 @@ class DataInterpreter(Role):
             return
         result, success = await self.execute_code.run(code)
         if success:
+            if len(result) > 50000:
+                with open('large_data.json', 'w') as f:
+                    json.dump(result, f)
+                result = 'large_data.json'
             print(result)
-            data_info = DATA_INFO.format(info=result)
-            self.working_memory.add(Message(content=data_info, role="user", cause_by=CheckData))
