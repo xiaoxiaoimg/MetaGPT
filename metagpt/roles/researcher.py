@@ -58,9 +58,9 @@ class Researcher(Role):
         msg = self.rc.memory.get(k=1)[0]
         if isinstance(msg.instruct_content, Report):
             instruct_content = msg.instruct_content
-            topic = instruct_content.topic
-        else:
             topic = msg.content
+            if isinstance(msg.instruct_content, Report):
+                topic = msg.instruct_content.topic
 
         research_system_text = self.research_system_text(topic, todo)
         if isinstance(todo, CollectLinks):
