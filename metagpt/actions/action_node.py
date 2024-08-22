@@ -417,7 +417,10 @@ class ActionNode:
         timeout=USE_CONFIG_TIMEOUT,
     ) -> (str, BaseModel):
         """Use ActionOutput to wrap the output of aask"""
-        content = await self.llm.aask(prompt, system_msgs, images=images, timeout=timeout)
+        response = await self.llm.aask(prompt, system_msgs, images=images, timeout=timeout)
+        if isinstance(response, bytes):
+            response = response.decode('utf-8')
+        content = [line async for line in response]
         logger.debug(f"llm raw output:\n{content}")
         output_class = self.create_model_class(output_class_name, output_data_mapping)
 
