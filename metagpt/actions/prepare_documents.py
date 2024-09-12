@@ -35,6 +35,7 @@ class PrepareDocuments(Action):
             path = Path(self.config.workspace.path) / name
         else:
             path = Path(self.config.project_path)
+        path = Path(path)  # Convert the path string to a Path object
         if path.exists() and not self.config.inc:
             shutil.rmtree(path)
         self.config.project_path = path
