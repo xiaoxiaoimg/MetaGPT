@@ -92,6 +92,10 @@ class OpenAILLM(BaseLLM):
         )
         usage = None
         collected_messages = []
+        if chunk.usage is not None:
+            usage = CompletionUsage(**chunk.usage)
+        else:
+            usage = None
         async for chunk in response:
             chunk_message = chunk.choices[0].delta.content or "" if chunk.choices else ""  # extract the message
             finish_reason = (
