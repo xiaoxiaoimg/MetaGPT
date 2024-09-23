@@ -90,7 +90,25 @@ class WriteCode(Action):
         code = CodeParser.parse_code(block="", text=code_rsp)
         return code
 
-    async def run(self, *args, **kwargs) -> CodingContext:
+        async def run(self, *args, **kwargs) -> CodingContext:
+            bug_feedback = await self.repo.docs.get(filename=BUGFIX_FILENAME)
+            coding_context = CodingContext.loads(self.i_context.content)
+            test_doc = await self.repo.test_outputs.get(filename="test_" + coding_context.filename + ".json")
+            requirement_doc = await self.repo.docs.get(filename=REQUIREMENT_FILENAME)
+            summary_doc = None
+            if coding_context.design_doc and coding_context.design_doc.filename:
+                summary_doc = await self.repo.docs.code_summary.get(filename=coding_context.design_doc.filename)
+            # Ensure WriteCode.run is called correctly
+            await self.write_code(PROMPT_TEMPLATE.format(
+                design=coding_context.design_doc.content,
+                task=coding_context.task_doc.content,
+                code=coding_context.legacy_code_doc.content,
+                logs=coding_context.debug_log_doc.content,
+                summary_log=summary_doc.content if summary_doc else "",
+                feedback=bug_feedback.content if bug_feedback else "",
+                filename=coding_context.filename
+            ))
+            return coding_context
         bug_feedback = await self.repo.docs.get(filename=BUGFIX_FILENAME)
         coding_context = CodingContext.loads(self.i_context.content)
         test_doc = await self.repo.test_outputs.get(filename="test_" + coding_context.filename + ".json")
