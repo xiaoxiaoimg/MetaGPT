@@ -246,6 +246,38 @@ class WebBrowseAndSummarize(Action):
 
 
 class ConductResearch(Action):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.max_completion_tokens = 4096
+
+    async def run(self, topic: str, content: str) -> str:
+        chunks = self.split_content_into_chunks(content)
+        report = ''
+        for chunk in chunks:
+            chunk_report = await self.generate_report_for_chunk(topic, chunk)
+            report += chunk_report
+        return report
+
+    def split_content_into_chunks(self, content: str) -> list[str]:
+        words = content.split()
+        chunks = []
+        current_chunk = []
+        current_token_count = 0
+        for word in words:
+            current_chunk.append(word)
+            current_token_count += 1
+            if current_token_count >= self.max_completion_tokens:
+                chunks.append(' '.join(current_chunk))
+                current_chunk = []
+                current_token_count = 0
+        if current_chunk:
+            chunks.append(' '.join(current_chunk))
+        return chunks
+
+    async def generate_report_for_chunk(self, topic: str, chunk: str) -> str:
+        prompt = CONDUCT_RESEARCH_PROMPT.format(topic=topic, content=chunk)
+        response = await self.llm.ask(prompt)
+        return response['content']
     """Action class to conduct research and generate a research report."""
 
     def __init__(self, **kwargs):
