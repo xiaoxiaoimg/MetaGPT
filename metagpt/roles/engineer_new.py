@@ -143,14 +143,7 @@ class Engineer(Role):
             return None
         if isinstance(self.rc.todo, WriteCodePlanAndChange):
             self.next_todo_action = any_to_name(WriteCode)
-async def _act_code_plan_and_change(self):
-    try:
-        # Existing logic for _act_code_plan_and_change
-        pass
-    except Exception as e:
-        with open('docs/bugfix.txt', 'a') as f:
-            f.write(f'Error in _act_code_plan_and_change: {str(e)}\n')
-        raise
+            return await self._act_code_plan_and_change()
         if isinstance(self.rc.todo, WriteCode):
             self.next_todo_action = any_to_name(SummarizeCode)
             return await self._act_write_code()
