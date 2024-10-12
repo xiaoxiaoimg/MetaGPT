@@ -92,7 +92,15 @@ class OpenAILLM(BaseLLM):
         )
         usage = None
         collected_messages = []
-        async for chunk in response:
+        try:
+            async for chunk in response:
+                chunk_message = chunk.choices[0].delta.content or '' if chunk.choices else ''  # extract the message
+                finish_reason = (
+                    chunk.choices[0].finish_reason if chunk.choices and hasattr(chunk.choices[0], 'finish_reason') else None
+                )
+                log_llm_stream(chunk_message)
+        except Exception as e:
+            logger.error(f'Error processing chunk: {e}')
             chunk_message = chunk.choices[0].delta.content or "" if chunk.choices else ""  # extract the message
             finish_reason = (
                 chunk.choices[0].finish_reason if chunk.choices and hasattr(chunk.choices[0], "finish_reason") else None

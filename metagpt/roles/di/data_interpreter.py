@@ -71,6 +71,8 @@ class DataInterpreter(Role):
             self._set_state(0)
             return True
 
+        if len(context) > 50000:
+            context = context[:50000]
         prompt = REACT_THINK_PROMPT.format(user_requirement=user_requirement, context=context)
         rsp = await self.llm.aask(prompt)
         rsp_dict = json.loads(CodeParser.parse_code(block=None, text=rsp))
